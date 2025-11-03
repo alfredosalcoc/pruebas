@@ -742,7 +742,7 @@ local CoreGui = getService("CoreGui")
 
 
 
-local VicoreInterface = useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://10804731440")[1]
+local VicoreInterface = useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://10804731440")[1]
 
 local buildAttempts = 0
 
@@ -784,7 +784,7 @@ repeat
 
 
 
-	toDestroy, VicoreInterface = VicoreInterface, useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://10804731440")[1]
+	toDestroy, VicoreInterface = VicoreInterface, useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://10804731440")[1]
 
 	if toDestroy and not useStudio then toDestroy:Destroy() end
 
@@ -830,7 +830,7 @@ if gethui then
 
 			Interface.Enabled = false
 
-			Interface.Name = "Rayfield-Old"
+			Interface.Name = "Vicore-Old"
 
 		end
 
@@ -844,7 +844,7 @@ elseif not useStudio then
 
 			Interface.Enabled = false
 
-			Interface.Name = "Rayfield-Old"
+			Interface.Name = "Vicore-Old"
 
 		end
 
@@ -2588,7 +2588,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 	if VicoreInterface:FindFirstChild('Loading') then
 
-		if getgenv and not getgenv().rayfieldCached then
+		if getgenv and not getgenv().VicoreCached then
 
 			VicoreInterface.Enabled = true
 
@@ -2606,7 +2606,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 
 
-	if getgenv then getgenv().rayfieldCached = true end
+	if getgenv then getgenv().VicoreCached = true end
 
 
 
