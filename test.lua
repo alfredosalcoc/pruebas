@@ -2706,9 +2706,9 @@ function VicoreLibrary:CreateWindow(Settings)
 
 	LoadingFrame.Version.TextTransparency = 1
 
-	LoadingFrame.Title.Text = Settings.LoadingTitle or "Vicoré"
+	LoadingFrame.Title.Text = "Vicoré"
 
-	LoadingFrame.Subtitle.Text = Settings.LoadingSubtitle or "Colección Vicoré"
+	LoadingFrame.Subtitle.Text = "Colección Vicoré"
 
 
 
