@@ -2708,7 +2708,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 	LoadingFrame.Title.Text = "Vicoré"
 
-	LoadingFrame.Subtitle.Text = "Colección Vicoré"
+	LoadingFrame.Subtitle.Text = "by Vicoré Development"
 
 
 
