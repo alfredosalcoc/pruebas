@@ -742,7 +742,7 @@ local CoreGui = getService("CoreGui")
 
 
 
-local VicoreInterface = useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://10804731440")[1]
+local VicoreInterface = useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://90972839239820")[1]
 
 local buildAttempts = 0
 
@@ -784,8 +784,8 @@ repeat
 
 
 
-	toDestroy, VicoreInterface = VicoreInterface, useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://10804731440")[1]
-
+	toDestroy, VicoreInterface = VicoreInterface, useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://90972839239820")[1] --CAMBIAR ASSET AQUI 
+																																       --90972839239820
 	if toDestroy and not useStudio then toDestroy:Destroy() end
 
 
