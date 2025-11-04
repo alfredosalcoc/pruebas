@@ -3047,6 +3047,32 @@ function VicoreLibrary:CreateWindow(Settings)
 			keymain.BackgroundColor3 = Color3.fromRGB(62, 45, 32) -- Marrón oscuro elegante
 			keymain.BackgroundTransparency = 0.05 -- Casi sólido, pero no agresivo
 			
+			-- Gradiente de fondo (oscuro izquierda → claro derecha)
+			local gradient = keymain:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
+			gradient.Name = "BackgroundGradient"
+			gradient.Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 32, 22)), -- lado izquierdo
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(95, 70, 50))  -- lado derecho
+			})
+			gradient.Rotation = 0 -- Horizontal
+			gradient.Transparency = NumberSequence.new(0)
+			gradient.Parent = keymain
+			
+			-- Sutil brillo ambiental lateral (opcional, segunda capa de luz cálida)
+			local lightLayer = keymain:FindFirstChild("VicoreLight") or Instance.new("UIGradient")
+			lightLayer.Name = "VicoreLight"
+			lightLayer.Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)), -- blanco sutil
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+			})
+			lightLayer.Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 1),   -- completamente transparente al inicio
+				NumberSequenceKeypoint.new(0.85, 0.95), -- leve brillo hacia la derecha
+				NumberSequenceKeypoint.new(1, 1)
+			})
+			lightLayer.Rotation = 0
+			lightLayer.Parent = keymain
+			
 			-- Si tiene borde o sombreado (UIStroke dentro de Input por ejemplo)
 			if keymain:FindFirstChildOfClass("UIStroke") then
 				keymain.UIStroke.Color = Color3.fromRGB(102, 75, 56) -- Marrón medio
@@ -3114,7 +3140,7 @@ function VicoreLibrary:CreateWindow(Settings)
 				KeyUI.Parent = CoreGui
 
 			end
-
+			-- FIN de gpteada
 
 
 			if gethui then
