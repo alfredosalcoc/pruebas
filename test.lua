@@ -3091,7 +3091,6 @@ function VicoreLibrary:CreateWindow(Settings)
 				corner.CornerRadius = UDim.new(0, 12)
 			end
 
-
 			KeyUI.Enabled = true
 
 
