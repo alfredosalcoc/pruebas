@@ -3041,12 +3041,12 @@ function VicoreLibrary:CreateWindow(Settings)
 			local KeyUI = useStudio and script.Parent:FindFirstChild('Key') or game:GetObjects("rbxassetid://11380036235")[1] --CHANGE KEY UI IF I WANT
 
 			-- Cambiar colores del frame principal
-			local main = KeyUI.Main
+			local keymain = KeyUI.Main
 			
 			-- Color base marrón cálido (principal del fondo)
-			main.BackgroundColor3 = Color3.fromRGB(62, 45, 32) -- Marrón oscuro elegante
-			main.BackgroundTransparency = 0.05 -- Casi sólido, pero no agresivo
-
+			keymain.BackgroundColor3 = Color3.fromRGB(62, 45, 32) -- Marrón oscuro elegante
+			keymain.BackgroundTransparency = 0.05 -- Casi sólido, pero no agresivo
+			
 
 					
 			KeyUI.Enabled = true
