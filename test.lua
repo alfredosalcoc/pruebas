@@ -3043,7 +3043,7 @@ function VicoreLibrary:CreateWindow(Settings)
 			-- Cambiar colores del frame principal
 			local keymain = KeyUI.Main
 			
-			keymain.BackgroundColor3 = Color3.fromRGB(180, 130, 90)
+			keymain.BackgroundColor3 = Color3.fromRGB(155, 107, 65)
 			
 			-- Gradiente de fondo (oscuro izquierda → claro derecha)
 			local gradient = keymain:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
