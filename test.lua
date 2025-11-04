@@ -22,7 +22,7 @@
 
 if debugX then
 
-	warn('Initialising Vicoré')
+	warn('Initialising VicoréUI')
 
 end
 
@@ -140,7 +140,7 @@ end
 
 local requestsDisabled = true --getgenv and getgenv().DISABLE_RAYFIELD_REQUESTS
 
-local InterfaceBuild = '3K3W'
+local InterfaceBuild = '6.0'
 
 local Release = "Build 1.68"
 
@@ -166,11 +166,11 @@ local settingsTable = {
 
 	},
 
-	System = {
+	--[[System = {
 
 		usageAnalytics = {Type = 'toggle', Value = true, Name = 'Anonymised Analytics'},
 
-	}
+	}]]
 
 }
 
@@ -526,166 +526,87 @@ end
 
 
 
-local VicorePalette = {
-
-
-
+local VicorePaletteOld = {
 	TextColor = Color3.fromRGB(237, 224, 209),
-
-
-
-
-
-
-
 	Background = Color3.fromRGB(36, 25, 20),
-
-
-
 	Topbar = Color3.fromRGB(54, 36, 26),
-
-
-
 	Shadow = Color3.fromRGB(24, 17, 12),
-
-
-
-
-
-
-
 	NotificationBackground = Color3.fromRGB(46, 31, 24),
-
-
-
 	NotificationActionsBackground = Color3.fromRGB(210, 188, 156),
-
-
-
-
-
-
-
 	TabBackground = Color3.fromRGB(66, 46, 33),
-
-
-
 	TabStroke = Color3.fromRGB(94, 70, 52),
-
-
-
 	TabBackgroundSelected = Color3.fromRGB(182, 136, 88),
-
-
-
 	TabTextColor = Color3.fromRGB(232, 214, 191),
-
-
-
 	SelectedTabTextColor = Color3.fromRGB(43, 30, 21),
-
-
-
-
-
-
-
 	ElementBackground = Color3.fromRGB(55, 38, 28),
-
-
-
 	ElementBackgroundHover = Color3.fromRGB(63, 44, 31),
-
-
-
 	SecondaryElementBackground = Color3.fromRGB(49, 34, 24),
-
-
-
 	ElementStroke = Color3.fromRGB(92, 71, 55),
-
-
-
 	SecondaryElementStroke = Color3.fromRGB(78, 60, 46),
-
-
-
-
-
-
-
 	SliderBackground = Color3.fromRGB(148, 102, 63),
-
-
-
 	SliderProgress = Color3.fromRGB(193, 142, 91),
-
-
-
 	SliderStroke = Color3.fromRGB(218, 167, 112),
-
-
-
-
-
-
-
 	ToggleBackground = Color3.fromRGB(52, 36, 27),
-
-
-
 	ToggleEnabled = Color3.fromRGB(188, 138, 92),
-
-
-
 	ToggleDisabled = Color3.fromRGB(106, 84, 68),
-
-
-
 	ToggleEnabledStroke = Color3.fromRGB(210, 160, 111),
-
-
-
 	ToggleDisabledStroke = Color3.fromRGB(130, 108, 89),
-
-
-
 	ToggleEnabledOuterStroke = Color3.fromRGB(86, 64, 48),
-
-
-
 	ToggleDisabledOuterStroke = Color3.fromRGB(72, 55, 43),
-
-
-
-
-
-
-
 	DropdownSelected = Color3.fromRGB(63, 44, 32),
-
-
-
 	DropdownUnselected = Color3.fromRGB(54, 38, 28),
-
-
-
-
-
-
-
 	InputBackground = Color3.fromRGB(57, 40, 30),
-
-
-
 	InputStroke = Color3.fromRGB(112, 85, 64),
-
-
-
 	PlaceholderColor = Color3.fromRGB(192, 166, 137)
+}
+local VicorePalette = {
+	TextColor = Color3.fromRGB(255, 240, 220),
 
+	-- Fondo general (mismo tono que el Key System)
+	Background = Color3.fromRGB(155, 107, 65),
+	Topbar = Color3.fromRGB(85, 60, 40),
+	Shadow = Color3.fromRGB(40, 28, 20),
 
+	-- Notificaciones y popups
+	NotificationBackground = Color3.fromRGB(90, 60, 40),
+	NotificationActionsBackground = Color3.fromRGB(215, 190, 150),
 
+	-- Pestañas
+	TabBackground = Color3.fromRGB(85, 63, 48),
+	TabStroke = Color3.fromRGB(130, 95, 70),
+	TabBackgroundSelected = Color3.fromRGB(200, 150, 95),
+	TabTextColor = Color3.fromRGB(255, 240, 220),
+	SelectedTabTextColor = Color3.fromRGB(40, 28, 20),
+
+	-- Elementos (cajas, sliders, etc.)
+	ElementBackground = Color3.fromRGB(92, 68, 51),
+	ElementBackgroundHover = Color3.fromRGB(105, 78, 60),
+	SecondaryElementBackground = Color3.fromRGB(80, 56, 42),
+	ElementStroke = Color3.fromRGB(135, 100, 70),
+	SecondaryElementStroke = Color3.fromRGB(115, 85, 60),
+
+	-- Sliders
+	SliderBackground = Color3.fromRGB(140, 90, 55),
+	SliderProgress = Color3.fromRGB(210, 160, 90),
+	SliderStroke = Color3.fromRGB(240, 200, 120),
+
+	-- Toggles
+	ToggleBackground = Color3.fromRGB(75, 52, 38),
+	ToggleEnabled = Color3.fromRGB(215, 160, 90),
+	ToggleDisabled = Color3.fromRGB(130, 105, 85),
+	ToggleEnabledStroke = Color3.fromRGB(235, 190, 120),
+	ToggleDisabledStroke = Color3.fromRGB(150, 120, 95),
+	ToggleEnabledOuterStroke = Color3.fromRGB(110, 80, 55),
+	ToggleDisabledOuterStroke = Color3.fromRGB(85, 65, 50),
+
+	-- Dropdowns
+	DropdownSelected = Color3.fromRGB(105, 75, 50),
+	DropdownUnselected = Color3.fromRGB(90, 65, 45),
+
+	-- Inputs
+	InputBackground = Color3.fromRGB(95, 70, 50),
+	InputStroke = Color3.fromRGB(150, 110, 75),
+	PlaceholderColor = Color3.fromRGB(215, 195, 160)
 }
 
 
@@ -743,7 +664,7 @@ local CoreGui = getService("CoreGui")
 
 
 local VicoreInterface = useStudio and script.Parent:FindFirstChild('Vicore') or game:GetObjects("rbxassetid://126699216981839")[1]
-
+VicoreInterface.Build.Value = InterfaceBuild
 local buildAttempts = 0
 
 local correctBuild = false
@@ -1054,7 +975,71 @@ local function ChangeTheme(Theme)
 
 	end
 
-end
+	-- Aplicar degradado y marco dorado al Main de la library
+	local main = VicoreInterface.Main
+	main.BackgroundColor3 = Color3.fromRGB(155, 107, 65)
+
+	-- 🔸 Degradado Vicoré (igual al del Key System)
+	local gradient = main:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
+	gradient.Name = "BackgroundGradient"
+	gradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 70, 50)),  -- lado izquierdo
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 32, 22))   -- lado derecho
+	})
+	gradient.Rotation = 0
+	gradient.Transparency = NumberSequence.new(0)
+	gradient.Parent = main
+
+	-- 🔸 Marco dorado exterior animado (idéntico al del Key System)
+	if main.Parent:FindFirstChild("VicoreOuterBorder") then
+		main.Parent.VicoreOuterBorder:Destroy()
+	end
+
+	local border = Instance.new("Frame")
+	border.Name = "VicoreOuterBorder"
+	border.Parent = main.Parent
+	border.BackgroundTransparency = 1
+	border.BorderSizePixel = 0
+	border.AnchorPoint = main.AnchorPoint
+	border.Size = main.Size
+	border.Position = main.Position
+	border.ZIndex = main.ZIndex - 1
+	border.Active = false
+
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 12)
+	corner.Parent = border
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Name = "VicoreFrameStroke"
+	stroke.Parent = border
+	stroke.Thickness = 3.8
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.LineJoinMode = Enum.LineJoinMode.Round
+	stroke.Transparency = 0
+	stroke.Color = Color3.fromRGB(255, 245, 200)
+
+	local strokeGradient = Instance.new("UIGradient")
+	strokeGradient.Name = "GoldGradient"
+	strokeGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 235)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+		ColorSequenceKeypoint.new(1,   Color3.fromRGB(255, 215, 90))
+	})
+	strokeGradient.Rotation = 0
+	strokeGradient.Parent = stroke
+
+	local TweenService = game:GetService("TweenService")
+	strokeGradient.Offset = Vector2.new(-0.5, 0)
+	local tween = TweenService:Create(
+		strokeGradient,
+		TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+		{ Offset = Vector2.new(0.5, 0) }
+	)
+	tween:Play()
+	_G.VicoreGoldTween = tween
+
+end--Fin ChangeTheme
 
 
 
@@ -3043,14 +3028,86 @@ function VicoreLibrary:CreateWindow(Settings)
 			-- Cambiar colores del frame principal
 			local keymain = KeyUI.Main
 			
-			keymain.BackgroundColor3 = Color3.fromRGB(155, 107, 65)
-			
+			keymain.BackgroundColor3 = Color3.fromRGB(155, 107, 65) --Color3.fromRGB(155, 107, 65)
+			--Marco exterior
+			-- 🟤 LIMPIAR CUALQUIER MARCO ANTERIOR
+			if keymain.Parent:FindFirstChild("VicoreOuterBorder") then
+				keymain.Parent.VicoreOuterBorder:Destroy()
+			end
+
+			-- 🔅 Cancelar animación anterior si existe
+			local TweenService = game:GetService("TweenService")
+			if _G.VicoreGoldTween then
+				_G.VicoreGoldTween:Cancel()
+				_G.VicoreGoldTween = nil
+			end
+
+			-- 🟤 FRAME EXTERIOR (DETÁS DEL MAIN)
+			local border = Instance.new("Frame")
+			border.Name = "VicoreOuterBorder"
+			border.Parent = keymain.Parent
+			border.BackgroundTransparency = 1
+			border.BorderSizePixel = 0
+			border.AnchorPoint = keymain.AnchorPoint
+
+			-- ✅ Ajuste preciso: un pelín más pequeño y centrado (elimina hueco)
+			border.Size = keymain.Size + UDim2.new(0, 0, 0, 0) -- mismo tamaño
+			border.Position = keymain.Position                 -- misma posición
+			border.ZIndex = keymain.ZIndex - 1
+			border.Active = false
+			border.ClipsDescendants = false
+
+			-- 🔹 Esquinas redondeadas: un poco más curvas que el main
+			local mainCorner = keymain:FindFirstChildOfClass("UICorner")
+			local borderCorner = Instance.new("UICorner")
+			local mainRadius = mainCorner and mainCorner.CornerRadius or UDim.new(0, 12)
+			-- aumentamos sutilmente para cubrir el borde del main
+			borderCorner.CornerRadius = UDim.new(mainRadius.Scale, mainRadius.Offset + 2)
+			borderCorner.Parent = border
+
+			-- 🌟 UIStroke DORADO CLARO
+			local stroke = Instance.new("UIStroke")
+			stroke.Name = "VicoreFrameStroke"
+			stroke.Parent = border
+			stroke.Thickness = 3.8 -- más grueso, cubre cualquier borde visible
+			stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			stroke.LineJoinMode = Enum.LineJoinMode.Round
+			stroke.Transparency = 0
+			stroke.Color = Color3.fromRGB(255, 245, 200)
+
+			-- ✨ GRADIENTE DORADO BRILLANTE
+			local strokeGradient = Instance.new("UIGradient")
+			strokeGradient.Name = "GoldGradient"
+			strokeGradient.Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 235)),
+				ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+				ColorSequenceKeypoint.new(1,   Color3.fromRGB(255, 215, 90))
+			})
+			strokeGradient.Rotation = 0
+			strokeGradient.Parent = stroke
+
+			-- 🔁 ANIMACIÓN DE BRILLO HORIZONTAL
+			strokeGradient.Offset = Vector2.new(-0.5, 0)
+
+			local tweenInfo = TweenInfo.new(
+				1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true
+			)
+
+			local tween = TweenService:Create(
+				strokeGradient, tweenInfo, { Offset = Vector2.new(0.5, 0) }
+			)
+			tween:Play()
+			_G.VicoreGoldTween = tween
+
+			--Fin marco
+
+
 			-- Gradiente de fondo (oscuro izquierda → claro derecha)
 			local gradient = keymain:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
 			gradient.Name = "BackgroundGradient"
 			gradient.Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 32, 22)),  -- Marrón claro cálido (inicio)
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(95, 70, 50)) -- Marfil suave (final)
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 70, 50)), -- Marfil suave (final)
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 32, 22))  -- Marrón claro cálido (inicio)
 			})
 			gradient.Rotation = 0 -- Horizontal
 			gradient.Transparency = NumberSequence.new(0)
@@ -3071,10 +3128,11 @@ function VicoreLibrary:CreateWindow(Settings)
 			lightLayer.Rotation = 0
 			lightLayer.Parent = keymain
 			
-			-- Si tiene borde o sombreado (UIStroke dentro de Input por ejemplo)
-			if keymain:FindFirstChildOfClass("UIStroke") then
-				keymain.UIStroke.Color = Color3.fromRGB(102, 75, 56) -- Marrón medio
-				keymain.UIStroke.Transparency = 0.2
+			-- Si tiene borde o sombreado (UIStroke dentro del Main)
+			local stroke = keymain:FindFirstChildOfClass("UIStroke")
+			if stroke then
+				stroke.Color = Color3.fromRGB(102, 75, 56) -- Marrón medio
+				stroke.Transparency = 0.2
 			end
 			
 			-- Si tiene un gradiente o sombra (Shadow frame)
@@ -3385,34 +3443,40 @@ function VicoreLibrary:CreateWindow(Settings)
 
 			KeyMain.Hide.MouseButton1Click:Connect(function()
 
+				-- 🟤 Animaciones de desvanecimiento de la GUI
 				TweenService:Create(KeyMain, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 467, 0, 175)}):Play()
-
 				TweenService:Create(KeyMain.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Title, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.KeyNote, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Input, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Input.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Input.InputBox, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.NoteTitle, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.NoteMessage, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 				TweenService:Create(KeyMain.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 
-				task.wait(0.51)
+				-- ✨ Desvanece también el borde dorado (si existe)
+				local border = KeyMain.Parent:FindFirstChild("VicoreOuterBorder")
+				if border then
+					local borderStroke = border:FindFirstChildOfClass("UIStroke")
+					if borderStroke then
+						TweenService:Create(borderStroke, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+					end
+				end
 
+				-- Espera que acabe el fade
+				task.wait(0.65)
+
+				-- 🔁 Limpieza segura
+				if _G.VicoreGoldTween then
+					_G.VicoreGoldTween:Cancel()
+					_G.VicoreGoldTween = nil
+				end
+
+				if border then border:Destroy() end
 				VicoreLibrary:Destroy()
-
 				KeyUI:Destroy()
 
 			end)
