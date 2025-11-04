@@ -3038,7 +3038,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 			VicoreInterface.Enabled = false
 
-			local KeyUI = useStudio and script.Parent:FindFirstChild('Key') or game:GetObjects("rbxassetid://11380036235")[1]
+			local KeyUI = useStudio and script.Parent:FindFirstChild('Key') or game:GetObjects("rbxassetid://11380036235")[1] --CHANGE KEY UI IF I WANT
 
 
 
