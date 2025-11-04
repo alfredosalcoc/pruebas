@@ -3051,8 +3051,8 @@ function VicoreLibrary:CreateWindow(Settings)
 			local gradient = keymain:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
 			gradient.Name = "BackgroundGradient"
 			gradient.Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 32, 22)), -- lado izquierdo
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(95, 70, 50))  -- lado derecho
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(110, 80, 55)),  -- Marrón claro cálido (inicio)
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(230, 210, 180)) -- Marfil suave (final)
 			})
 			gradient.Rotation = 0 -- Horizontal
 			gradient.Transparency = NumberSequence.new(0)
