@@ -3053,7 +3053,12 @@ function VicoreLibrary:CreateWindow(Settings)
 				keymain.UIStroke.Transparency = 0.2
 			end
 			
-			
+			-- Si tiene un gradiente o sombra (Shadow frame)
+			local shadow = keymain:FindFirstChild("Shadow")
+			if shadow then
+				shadow.BackgroundColor3 = Color3.fromRGB(30, 20, 15)
+				shadow.BackgroundTransparency = 1 -- sombra suave
+			end
 			
 			-- Input frame (ligeramente más claro que el fondo para contraste)
 			local input = keymain:FindFirstChild("Input")
