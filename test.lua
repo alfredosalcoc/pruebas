@@ -3090,7 +3090,8 @@ function VicoreLibrary:CreateWindow(Settings)
 			if corner then
 				corner.CornerRadius = UDim.new(0, 12)
 			end
-					
+
+
 			KeyUI.Enabled = true
 
 
@@ -3159,13 +3160,12 @@ function VicoreLibrary:CreateWindow(Settings)
 
 
 
-			KeyMain.Size = UDim2.new(0, 440, 0, 150)
+			KeyMain.Size = UDim2.new(0, 467, 0, 175)
 
 			KeyMain.BackgroundTransparency = 1
 
-			
 			KeyMain.Shadow.Image.ImageTransparency = 1
-					
+
 			KeyMain.Title.TextTransparency = 1
 
 			KeyMain.Subtitle.TextTransparency = 1
@@ -3188,7 +3188,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 			TweenService:Create(KeyMain, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 
-			TweenService:Create(KeyMain, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 467, 0, 175)}):Play()
+			TweenService:Create(KeyMain, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 187)}):Play()
 
 			TweenService:Create(KeyMain.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5}):Play()
 
