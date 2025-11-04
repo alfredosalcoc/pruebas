@@ -3081,7 +3081,15 @@ function VicoreLibrary:CreateWindow(Settings)
 					inputBox.PlaceholderColor3 = Color3.fromRGB(200, 180, 160)
 					end
 				end
-
+			local corner = input:FindFirstChildOfClass("UICorner")
+				if corner then
+					corner.CornerRadius = UDim.new(0, 8)
+				end
+			-- UICorner del Main (bordes suaves)
+			local corner = keymain:FindFirstChildOfClass("UICorner")
+			if corner then
+				corner.CornerRadius = UDim.new(0, 12)
+			end
 			
 
 
@@ -3153,7 +3161,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 
 
-			KeyMain.Size = UDim2.new(0, 467, 0, 175)
+			KeyMain.Size = UDim2.new(0, 440, 0, 150)
 
 			KeyMain.BackgroundTransparency = 1
 
