@@ -3165,7 +3165,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 			KeyMain.BackgroundTransparency = 1
 
-			KeyMain.Shadow.Image.ImageTransparency = 0
+			KeyMain.Shadow.Image.ImageTransparency = 1
 
 			KeyMain.Title.TextTransparency = 1
 
@@ -3183,7 +3183,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 			KeyMain.NoteMessage.TextTransparency = 1
 
-			KeyMain.Hide.ImageTransparency = 1
+			KeyMain.Hide.ImageTransparency = 0
 
 
 
