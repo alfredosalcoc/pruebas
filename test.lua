@@ -3166,6 +3166,7 @@ function VicoreLibrary:CreateWindow(Settings)
 			KeyMain.BackgroundTransparency = 1
 
 			KeyMain.Shadow.Image.ImageTransparency = 1
+			KeyMain.Shadow.Visible = false
 
 			KeyMain.Title.TextTransparency = 1
 
