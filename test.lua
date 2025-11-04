@@ -3072,24 +3072,17 @@ function VicoreLibrary:CreateWindow(Settings)
 					stroke.Transparency = 0.25
 				end
 			
-				local corner = input:FindFirstChildOfClass("UICorner")
-				if corner then
-					corner.CornerRadius = UDim.new(0, 8)
-				end
+				
 			
 				local inputBox = input:FindFirstChild("InputBox")
 				if inputBox then
 					inputBox.BackgroundColor3 = Color3.fromRGB(92, 68, 51)
 					inputBox.TextColor3 = Color3.fromRGB(255, 238, 220) -- texto claro
 					inputBox.PlaceholderColor3 = Color3.fromRGB(200, 180, 160)
+					end
 				end
-			end
+
 			
-			-- UICorner del Main (bordes suaves)
-			local corner = keymain:FindFirstChildOfClass("UICorner")
-			if corner then
-				corner.CornerRadius = UDim.new(0, 12)
-			end
 
 
 			KeyUI.Enabled = true
