@@ -3161,7 +3161,7 @@ function VicoreLibrary:CreateWindow(Settings)
 
 
 
-			KeyMain.Size = UDim2.new(0, 440, 0, 150)
+			KeyMain.Size = UDim2.new(0, 600, 0, 250)
 
 			KeyMain.BackgroundTransparency = 1
 
