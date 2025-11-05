@@ -139,7 +139,7 @@ end
 
 
 local requestsDisabled = true --getgenv and getgenv().DISABLE_RAYFIELD_REQUESTS
-
+local BorderAnimId = 0
 local InterfaceBuild = '6.0'
 
 local Release = "Build 1.68"
@@ -562,35 +562,29 @@ local VicorePaletteOld = {
 local VicorePalette = {
 	TextColor = Color3.fromRGB(255, 240, 220),
 
-	-- Fondo general (mismo tono que el Key System)
 	Background = Color3.fromRGB(155, 107, 65),
 	Topbar = Color3.fromRGB(85, 60, 40),
 	Shadow = Color3.fromRGB(40, 28, 20),
 
-	-- Notificaciones y popups
 	NotificationBackground = Color3.fromRGB(90, 60, 40),
 	NotificationActionsBackground = Color3.fromRGB(215, 190, 150),
 
-	-- Pestañas
 	TabBackground = Color3.fromRGB(85, 63, 48),
 	TabStroke = Color3.fromRGB(130, 95, 70),
 	TabBackgroundSelected = Color3.fromRGB(200, 150, 95),
 	TabTextColor = Color3.fromRGB(255, 240, 220),
 	SelectedTabTextColor = Color3.fromRGB(40, 28, 20),
 
-	-- Elementos (cajas, sliders, etc.)
 	ElementBackground = Color3.fromRGB(92, 68, 51),
 	ElementBackgroundHover = Color3.fromRGB(105, 78, 60),
 	SecondaryElementBackground = Color3.fromRGB(80, 56, 42),
 	ElementStroke = Color3.fromRGB(135, 100, 70),
 	SecondaryElementStroke = Color3.fromRGB(115, 85, 60),
 
-	-- Sliders
 	SliderBackground = Color3.fromRGB(140, 90, 55),
 	SliderProgress = Color3.fromRGB(210, 160, 90),
 	SliderStroke = Color3.fromRGB(240, 200, 120),
 
-	-- Toggles
 	ToggleBackground = Color3.fromRGB(75, 52, 38),
 	ToggleEnabled = Color3.fromRGB(215, 160, 90),
 	ToggleDisabled = Color3.fromRGB(130, 105, 85),
@@ -599,15 +593,16 @@ local VicorePalette = {
 	ToggleEnabledOuterStroke = Color3.fromRGB(110, 80, 55),
 	ToggleDisabledOuterStroke = Color3.fromRGB(85, 65, 50),
 
-	-- Dropdowns
 	DropdownSelected = Color3.fromRGB(105, 75, 50),
 	DropdownUnselected = Color3.fromRGB(90, 65, 45),
 
-	-- Inputs
 	InputBackground = Color3.fromRGB(95, 70, 50),
 	InputStroke = Color3.fromRGB(150, 110, 75),
 	PlaceholderColor = Color3.fromRGB(215, 195, 160)
 }
+
+
+
 
 
 
@@ -638,7 +633,8 @@ local VicoreLibrary = {
 }
 
 
-
+VicoreLibrary.Theme = VicoreLibrary.Theme or {}
+VicoreLibrary.Theme.Vicore = VicorePalette
 VicoreLibrary.Theme.Default = VicoreLibrary.Theme.Vicore
 
 
@@ -975,70 +971,26 @@ local function ChangeTheme(Theme)
 
 	end
 
-	-- Aplicar degradado y marco dorado al Main de la library
-	local main = VicoreInterface.Main
-	main.BackgroundColor3 = Color3.fromRGB(155, 107, 65)
+	-- === Degradado Vicoré (oscuro → claro, fondo cálido) ===
 
-	-- 🔸 Degradado Vicoré (igual al del Key System)
-	local gradient = main:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
-	gradient.Name = "BackgroundGradient"
-	gradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 70, 50)),  -- lado izquierdo
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 32, 22))   -- lado derecho
-	})
-	gradient.Rotation = 0
-	gradient.Transparency = NumberSequence.new(0)
-	gradient.Parent = main
+	local main = VicoreInterface:FindFirstChild("Main")
+	if main then
+		-- Color base marrón cálido (por si el gradiente falla)
+		main.BackgroundColor3 = Color3.fromRGB(155, 107, 65)
 
-	-- 🔸 Marco dorado exterior animado (idéntico al del Key System)
-	if main.Parent:FindFirstChild("VicoreOuterBorder") then
-		main.Parent.VicoreOuterBorder:Destroy()
+		-- Crear o reutilizar el gradiente
+		local gradient = main:FindFirstChild("BackgroundGradient") or Instance.new("UIGradient")
+		gradient.Name = "BackgroundGradient"
+		gradient.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 32, 22)),  -- izquierda (oscuro)
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(95, 70, 50))   -- derecha (más claro)
+		})
+		gradient.Rotation = 0  -- horizontal
+		gradient.Transparency = NumberSequence.new(0)
+		gradient.Parent = main
+	else
+		warn("[Vicoré] No se encontró el Main en VicoreInterface para aplicar el degradado.")
 	end
-
-	local border = Instance.new("Frame")
-	border.Name = "VicoreOuterBorder"
-	border.Parent = main.Parent
-	border.BackgroundTransparency = 1
-	border.BorderSizePixel = 0
-	border.AnchorPoint = main.AnchorPoint
-	border.Size = main.Size
-	border.Position = main.Position
-	border.ZIndex = main.ZIndex - 1
-	border.Active = false
-
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 12)
-	corner.Parent = border
-
-	local stroke = Instance.new("UIStroke")
-	stroke.Name = "VicoreFrameStroke"
-	stroke.Parent = border
-	stroke.Thickness = 3.8
-	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	stroke.LineJoinMode = Enum.LineJoinMode.Round
-	stroke.Transparency = 0
-	stroke.Color = Color3.fromRGB(255, 245, 200)
-
-	local strokeGradient = Instance.new("UIGradient")
-	strokeGradient.Name = "GoldGradient"
-	strokeGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 235)),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
-		ColorSequenceKeypoint.new(1,   Color3.fromRGB(255, 215, 90))
-	})
-	strokeGradient.Rotation = 0
-	strokeGradient.Parent = stroke
-
-	local TweenService = game:GetService("TweenService")
-	strokeGradient.Offset = Vector2.new(-0.5, 0)
-	local tween = TweenService:Create(
-		strokeGradient,
-		TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-		{ Offset = Vector2.new(0.5, 0) }
-	)
-	tween:Play()
-	_G.VicoreGoldTween = tween
-
 end--Fin ChangeTheme
 
 
@@ -1790,168 +1742,150 @@ end
 local function Hide(notify: boolean?)
 
 	if MPrompt then
-
 		MPrompt.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-
 		MPrompt.Position = UDim2.new(0.5, 0, 0, -50)
-
 		MPrompt.Size = UDim2.new(0, 40, 0, 10)
-
 		MPrompt.BackgroundTransparency = 1
-
 		MPrompt.Title.TextTransparency = 1
-
 		MPrompt.Visible = true
-
 	end
-
-
 
 	task.spawn(closeSearch)
 
-
-
 	Debounce = true
-
 	if notify then
-
 		if useMobilePrompt then 
-
-			VicoreLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.", Duration = 7, Image = 4400697855})
-
+			VicoreLibrary:Notify({
+				Title = "Interface Hidden",
+				Content = "The interface has been hidden, you can unhide the interface by tapping 'Show'.",
+				Duration = 7,
+				Image = 4400697855
+			})
 		else
-
-			VicoreLibrary:Notify({Title = "Interfaz Oculta", Content = `La interfaz está oculta; muéstrala presionando {getSetting("General", "rayfieldOpen")}.`, Duration = 7, Image = 4400697855})
-
+			VicoreLibrary:Notify({
+				Title = "Interface Hidden",
+				Content = `The interface has been hidden, you can unhide the interface by pressing {getSetting("General", "rayfieldOpen")}.`,
+				Duration = 7,
+				Image = 4400697855
+			})
 		end
-
 	end
 
-
-
+	-- Tweens de cierre principales
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 470, 0, 0)}):Play()
-
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 470, 0, 45)}):Play()
-
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 	TweenService:Create(Main.Topbar.CornerRepair, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 	TweenService:Create(Main.Topbar.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-
 	TweenService:Create(Topbar.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-
 	TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
 
-
-
 	if useMobilePrompt and MPrompt then
-
-		TweenService:Create(MPrompt, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 120, 0, 30), Position = UDim2.new(0.5, 0, 0, 20), BackgroundTransparency = 0.3}):Play()
-
+		TweenService:Create(MPrompt, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(0, 120, 0, 30),
+			Position = UDim2.new(0.5, 0, 0, 20),
+			BackgroundTransparency = 0.3
+		}):Play()
 		TweenService:Create(MPrompt.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0.3}):Play()
-
 	end
-
-
 
 	for _, TopbarButton in ipairs(Topbar:GetChildren()) do
-
 		if TopbarButton.ClassName == "ImageButton" then
-
 			TweenService:Create(TopbarButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-
 		end
-
 	end
-
-
 
 	for _, tabbtn in ipairs(TabList:GetChildren()) do
-
 		if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
-
 			TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 			TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 			TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
-
 			TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-
 		end
-
 	end
-
-
 
 	dragInteract.Visible = false
 
+	-- 🔸 OCULTAR CONTENEDORES GRANDES (para que sliders y demás no “floten” durante el cierre)
+	Elements.Visible = false
+	TabList.Visible  = false
 
-
+	-- Fade de elementos internos (solo transparencias, ya no tocamos .Visible de cada hijo)
 	for _, tab in ipairs(Elements:GetChildren()) do
-
 		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
-
 			for _, element in ipairs(tab:GetChildren()) do
-
 				if element.ClassName == "Frame" then
-
 					if element.Name ~= "SectionSpacing" and element.Name ~= "Placeholder" then
-
 						if element.Name == "SectionTitle" or element.Name == 'SearchTitle-fsefsefesfsefesfesfThanks' then
-
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
 						elseif element.Name == 'Divider' then
-
 							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
 						else
-
 							TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
-							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-
-							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
-						end
-
-						for _, child in ipairs(element:GetChildren()) do
-
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
-
-								child.Visible = false
-
+							if element:FindFirstChild("UIStroke") then
+								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 							end
-
+							if element:FindFirstChild("Title") then
+								TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+							end
 						end
-
 					end
-
 				end
-
 			end
-
 		end
-
 	end
-
-
 
 	task.wait(0.5)
 
 	Main.Visible = false
+	Debounce = false	
 
-	Debounce = false
+	-- 🟡 Ocultar marco dorado Vicoré de forma segura
+	local border = Main.Parent:FindFirstChild("VicoreOuterBorder")
+	if border then
+		BorderAnimId += 1
+		local myId = BorderAnimId
 
-end
+		local stroke = border:FindFirstChildOfClass("UIStroke")
+
+		if _G.VicoreGoldTween then
+			_G.VicoreGoldTween:Cancel()
+			_G.VicoreGoldTween = nil
+		end
+
+		local borderTween = TweenService:Create(
+			border,
+			TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+			{ Size = UDim2.new(0, 470, 0, 0) }
+		)
+		borderTween:Play()
+
+		if stroke then
+			local strokeTween = TweenService:Create(
+				stroke,
+				TweenInfo.new(0.45, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+				{ Transparency = 1 }
+			)
+			strokeTween:Play()
+		end
+
+		borderTween.Completed:Connect(function()
+			if BorderAnimId ~= myId or not Hidden then
+				return
+			end
+
+			if border then
+				border.Visible = false
+				border.Size = Main.Size
+				border.Position = Main.Position
+			end
+		end)
+	end
+end -- Fin Hide
+
 
 
 
@@ -2079,7 +2013,7 @@ local function Maximise()
 
 	Debounce = false
 
-end
+end--Fin maximise
 
 
 
@@ -2090,178 +2024,187 @@ local function Unhide()
 	Debounce = true
 
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-
 	Main.Visible = true
 
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
+	-- 🔹 Volver a mostrar los contenedores que el Hide oculta
+	Elements.Visible = true
+	TabList.Visible = true
 
-	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 45)}):Play()
+	-- Animaciones principales de apertura
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)
+	}):Play()
 
-	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
+	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		Size = UDim2.new(0, 500, 0, 45)
+	}):Play()
 
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+		ImageTransparency = 0.6
+	}):Play()
 
-	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		BackgroundTransparency = 0
+	}):Play()
 
-	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		BackgroundTransparency = 0
+	}):Play()
 
-	TweenService:Create(Main.Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		BackgroundTransparency = 0
+	}):Play()
 
-	TweenService:Create(Main.Topbar.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+	TweenService:Create(Main.Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		BackgroundTransparency = 0
+	}):Play()
 
+	TweenService:Create(Main.Topbar.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+		TextTransparency = 0
+	}):Play()
 
-
+	-- Prompt móvil
 	if MPrompt then
+		TweenService:Create(MPrompt, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+			Size = UDim2.new(0, 40, 0, 10),
+			Position = UDim2.new(0.5, 0, 0, -50),
+			BackgroundTransparency = 1
+		}):Play()
 
-		TweenService:Create(MPrompt, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 40, 0, 10), Position = UDim2.new(0.5, 0, 0, -50), BackgroundTransparency = 1}):Play()
-
-		TweenService:Create(MPrompt.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-
-
+		TweenService:Create(MPrompt.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
+			TextTransparency = 1
+		}):Play()
 
 		task.spawn(function()
-
 			task.wait(0.5)
-
 			MPrompt.Visible = false
-
 		end)
-
 	end
 
-
-
+	-- Si estaba minimizada, restaurar
 	if Minimised then
-
 		task.spawn(Maximise)
-
 	end
 
-
-
-	dragBar.Position = useMobileSizing and UDim2.new(0.5, 0, 0.5, dragOffsetMobile) or UDim2.new(0.5, 0, 0.5, dragOffset)
-
-
+	dragBar.Position = useMobileSizing
+		and UDim2.new(0.5, 0, 0.5, dragOffsetMobile)
+		or UDim2.new(0.5, 0, 0.5, dragOffset)
 
 	dragInteract.Visible = true
 
-
-
+	-- Botones de la topbar
 	for _, TopbarButton in ipairs(Topbar:GetChildren()) do
-
 		if TopbarButton.ClassName == "ImageButton" then
-
-			if TopbarButton.Name == 'Icon' then
-
-				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-
+			if TopbarButton.Name == "Icon" then
+				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+					ImageTransparency = 0
+				}):Play()
 			else
-
-				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
-
+				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {
+					ImageTransparency = 0.8
+				}):Play()
 			end
-
-
-
 		end
-
 	end
 
-
-
+	-- Tabs (lista de pestañas)
 	for _, tabbtn in ipairs(TabList:GetChildren()) do
-
 		if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
-
 			if tostring(Elements.UIPageLayout.CurrentPage) == tabbtn.Title.Text then
-
-				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-
-				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-
-				TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-
-				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
-
+				-- pestaña actual
+				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					BackgroundTransparency = 0
+				}):Play()
+				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					TextTransparency = 0
+				}):Play()
+				TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					ImageTransparency = 0
+				}):Play()
+				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					Transparency = 1
+				}):Play()
 			else
-
-				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
-
-				TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
-
-				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
-
-				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
-
+				-- pestañas no seleccionadas
+				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					BackgroundTransparency = 0.7
+				}):Play()
+				TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					ImageTransparency = 0.2
+				}):Play()
+				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					TextTransparency = 0.2
+				}):Play()
+				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+					Transparency = 0.5
+				}):Play()
 			end
-
 		end
-
 	end
 
-
-
+	-- Elementos dentro de cada tab (sliders, toggles, etc.)
 	for _, tab in ipairs(Elements:GetChildren()) do
-
 		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
-
 			for _, element in ipairs(tab:GetChildren()) do
-
 				if element.ClassName == "Frame" then
-
 					if element.Name ~= "SectionSpacing" and element.Name ~= "Placeholder" then
 
-						if element.Name == "SectionTitle" or element.Name == 'SearchTitle-fsefsefesfsefesfesfThanks' then
+						if element.Name == "SectionTitle" or element.Name == "SearchTitle-fsefsefesfsefesfesfThanks" then
+							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+								TextTransparency = 0.4
+							}):Play()
 
-							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.4}):Play()
-
-						elseif element.Name == 'Divider' then
-
-							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.85}):Play()
+						elseif element.Name == "Divider" then
+							TweenService:Create(element.Divider, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+								BackgroundTransparency = 0.85
+							}):Play()
 
 						else
+							TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+								BackgroundTransparency = 0
+							}):Play()
 
-							TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-
-							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
-
-							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-
-						end
-
-						for _, child in ipairs(element:GetChildren()) do
-
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
-
-								child.Visible = true
-
+							if element:FindFirstChild("UIStroke") then
+								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+									Transparency = 0
+								}):Play()
 							end
 
+							if element:FindFirstChild("Title") then
+								TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
+									TextTransparency = 0
+								}):Play()
+							end
+						end
+
+						-- 🔹 Volver a hacer visibles los hijos (por compatibilidad con el sistema anterior)
+						for _, child in ipairs(element:GetChildren()) do
+							if child.ClassName == "Frame"
+								or child.ClassName == "TextLabel"
+								or child.ClassName == "TextBox"
+								or child.ClassName == "ImageButton"
+								or child.ClassName == "ImageLabel" then
+
+								child.Visible = true
+							end
 						end
 
 					end
-
 				end
-
 			end
-
 		end
-
 	end
 
-
-
-	TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5}):Play()
-
-
+	-- Barra de drag estética
+	TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		BackgroundTransparency = 0.5
+	}):Play()
 
 	task.wait(0.5)
 
 	Minimised = false
-
 	Debounce = false
-
-end
+end--Fin unhide
 
 
 
@@ -2358,28 +2301,50 @@ local function Minimise()
 	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 
 	TweenService:Create(Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
-
+	--Solucion GPT
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 495, 0, 45)}):Play()
-
 	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 495, 0, 45)}):Play()
 
+	-- 🔹 Suavizar fade de elementos (sliders, botones, etc.)
+	for _, tab in ipairs(Elements:GetChildren()) do
+		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" then
+			for _, element in ipairs(tab:GetChildren()) do
+				if element:IsA("GuiObject") then
+					local fadeTween = TweenService:Create(
+						element,
+						TweenInfo.new(0.25, Enum.EasingStyle.Exponential),
+						{BackgroundTransparency = 1}
+					)
+					fadeTween:Play()
 
+					-- Si tiene UIStroke o contenido visible, también se desvanece
+					if element:FindFirstChildOfClass("UIStroke") then
+						TweenService:Create(
+							element.UIStroke,
+							TweenInfo.new(0.25, Enum.EasingStyle.Exponential),
+							{Transparency = 1}
+						):Play()
+					end
+					if element:FindFirstChild("Title") then
+						TweenService:Create(
+							element.Title,
+							TweenInfo.new(0.25, Enum.EasingStyle.Exponential),
+							{TextTransparency = 1}
+						):Play()
+					end
+				end
+			end
+		end
+	end
 
-	task.wait(0.3)
-
-
-
+	-- 🔸 Ocultar de inmediato los contenedores principales (para evitar “fantasmas”)
 	Elements.Visible = false
-
 	TabList.Visible = false
 
-
-
-	task.wait(0.2)
-
+	task.wait(0.25)
 	Debounce = false
-
-end
+	--Fin Sol GPT
+end--Fin Minimise
 
 
 
@@ -3510,6 +3475,84 @@ function VicoreLibrary:CreateWindow(Settings)
 	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
+	--Marco custom
+	-- 🔸 Esperar a que el Main haya terminado su fade inicial
+task.delay(0.6, function()
+	if not Main then return end
+
+	-- 🟫 Crear el marco dentro del Main para que se mueva con él
+	local border = Instance.new("Frame")
+	border.Name = "VicoreOuterBorder"
+	border.Parent = Main
+	border.BackgroundTransparency = 1
+	border.BorderSizePixel = 0
+	border.AnchorPoint = Vector2.new(0.5, 0.5)
+	border.Position = UDim2.new(0.5, 0, 0.5, 0)
+	border.Size = UDim2.new(1, 0, 1, 0)
+	border.ZIndex = 0 -- detrás de todo
+	border.Active = false
+	border.ClipsDescendants = false
+
+	-- 🔹 Bordes redondeados igual que el Main
+	local mainCorner = Main:FindFirstChildOfClass("UICorner")
+	local borderCorner = Instance.new("UICorner")
+	local mainRadius = mainCorner and mainCorner.CornerRadius or UDim.new(0, 12)
+	borderCorner.CornerRadius = UDim.new(mainRadius.Scale, mainRadius.Offset + 2)
+	borderCorner.Parent = border
+
+	-- 🌟 UIStroke dorado
+	local stroke = Instance.new("UIStroke")
+	stroke.Name = "VicoreFrameStroke"
+	stroke.Parent = border
+	stroke.Thickness = 3.8
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.LineJoinMode = Enum.LineJoinMode.Round
+	stroke.Transparency = 1
+	stroke.Color = Color3.fromRGB(255, 245, 200)
+
+	-- ✨ Gradiente dorado
+	local strokeGradient = Instance.new("UIGradient")
+	strokeGradient.Name = "GoldGradient"
+	strokeGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 235)),
+		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+		ColorSequenceKeypoint.new(1,   Color3.fromRGB(255, 215, 90))
+	})
+	strokeGradient.Parent = stroke
+
+	-- 🎬 Fade-in y pulso dorado inicial
+	TweenService:Create(stroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+	task.wait(0.35)
+
+	local pulse = TweenService:Create(
+		strokeGradient,
+		TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+		{
+			Color = ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 250)),
+				ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 200)),
+				ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 230, 120))
+			})
+		}
+	)
+	pulse:Play()
+	pulse.Completed:Connect(function()
+		strokeGradient.Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 235)),
+			ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+			ColorSequenceKeypoint.new(1,   Color3.fromRGB(255, 215, 90))
+		})
+	end)
+
+	-- 🔁 Animación infinita del brillo lateral
+	strokeGradient.Offset = Vector2.new(-0.5, 0)
+	local tweenInfo = TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+	local tween = TweenService:Create(strokeGradient, tweenInfo, { Offset = Vector2.new(0.5, 0) })
+	tween:Play()
+	_G.VicoreGoldTween = tween
+end)
+	--Fin marco custom
+
 
 	task.wait(0.1)
 
